@@ -1,5 +1,6 @@
-FROM openjdk:8-jre
+FROM openjdk:8
 
+# Should we change this?
 MAINTAINER William Turner <william.turner@aero.bombardier.com>
 
 ENV PRESTO_VERSION 0.186
