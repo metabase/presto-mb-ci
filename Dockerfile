@@ -13,6 +13,16 @@ RUN curl -Lo /usr/local/bin/presto https://repo1.maven.org/maven2/com/facebook/p
 
 COPY ["./etc", "/opt/presto/etc"]
 
-EXPOSE 8080
+RUN keytool \
+        -genkeypair \
+        -alias "presto" \
+        -keyalg RSA \
+        -keystore /opt/presto/etc/keystore.jks \
+        -validity 10000 \
+        -dname "CN=*.presto-ci.metabase.com, OU=Engineering, O=Metabase, L=San Francisco, S=CA, C=USA" \
+        -ext "SAN:c=DNS:localhost,IP:127.0.0.1,DNS:presto" \
+        -storepass metabase
+
+EXPOSE 8080 8443
 
 CMD ["/opt/presto/bin/launcher", "run"]
