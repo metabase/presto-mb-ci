@@ -2,7 +2,7 @@ FROM openjdk:8
 
 MAINTAINER Jeff Evans <jeff.evans@metabase.com>
 
-ENV PRESTO_VERSION 0.186
+ENV PRESTO_VERSION 0.254
 
 RUN mkdir /opt/presto && \
     curl -LS https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz | tar -xz --strip-components=1 -C /opt/presto
