@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM eclipse-temurin:8-jdk
 
 MAINTAINER Jeff Evans <jeff.evans@metabase.com>
 
