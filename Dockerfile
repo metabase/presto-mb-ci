@@ -1,13 +1,19 @@
-FROM eclipse-temurin:8-jdk
+FROM eclipse-temurin:17-jdk
 
 MAINTAINER Jeff Evans <jeff.evans@metabase.com>
 
-ENV PRESTO_VERSION 0.254
+ENV PRESTO_VERSION 0.295
+
+# the Presto launcher script needs Python
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends python-is-python3 && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /opt/presto && \
     curl -LS https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz | tar -xz --strip-components=1 -C /opt/presto
 
-RUN curl -Lo /usr/local/bin/presto https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar && \
+# the executable CLI jar is not on Maven Central for newer versions
+RUN curl -fLo /usr/local/bin/presto https://github.com/prestodb/presto/releases/download/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar && \
     chmod +x /usr/local/bin/presto
 
 COPY ["./etc", "/opt/presto/etc"]
