@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # builds this Docker image for linux/amd64 (the platform of the CI runners), tagged with the Presto version.
-# add --push to push it to Docker Hub
+# loads it into the local Docker, or pushes it to Docker Hub with --push
 
 PRESTO_VERSION=$(sed -n 's/^FROM prestodb\/presto:\(.*\)$/\1/p' Dockerfile)
+OUTPUT=${1:---load}
 
-docker buildx build --platform linux/amd64 . -t "metabase/presto-mb-ci:${PRESTO_VERSION}" --load "$@"
+docker buildx build --platform linux/amd64 . -t "metabase/presto-mb-ci:${PRESTO_VERSION}" "$OUTPUT"
