@@ -1,16 +1,10 @@
-FROM eclipse-temurin:8-jdk
+FROM prestodb/presto:0.295
 
-MAINTAINER Jeff Evans <jeff.evans@metabase.com>
+RUN rm -rf /opt/presto-server/etc && \
+    ln -s /opt/presto-server /opt/presto && \
+    ln -s /usr/local/bin/presto-cli /usr/local/bin/presto
 
-ENV PRESTO_VERSION 0.254
-
-RUN mkdir /opt/presto && \
-    curl -LS https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz | tar -xz --strip-components=1 -C /opt/presto
-
-RUN curl -Lo /usr/local/bin/presto https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar && \
-    chmod +x /usr/local/bin/presto
-
-COPY ["./etc", "/opt/presto/etc"]
+COPY ["./etc", "/opt/presto-server/etc"]
 
 RUN keytool \
         -genkeypair \
@@ -23,5 +17,3 @@ RUN keytool \
         -storepass metabase
 
 EXPOSE 8080 8443
-
-CMD ["/opt/presto/bin/launcher", "run"]
